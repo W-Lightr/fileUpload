@@ -1,0 +1,58 @@
+server:
+  port: 8080
+spring:
+  servlet:
+    multipart:
+      # 上传文件大小限制
+      max-file-size: 3072MB
+      max-request-size: 3072MB
+  datasource:
+    # Druid配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: root
+      password: root
+      url: jdbc:mysql://127.0.0.1:3306/fileUpload?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+      max-active: 20
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-open-prepared-statements: 20
+      filters: stat,wall,slf4j
+
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+# mybatis
+mybatis:
+  mapper-locations: classpath:/mapper/*/*.xml
+logging:
+  file:
+    path: ./log
+  level:
+    root: info
+    com.lightr: debug
+swagger:
+  enable: true
+  application-name: '接口信息'
+  application-version: '1.1'
+  application-description: 'LightrServer接口文档'
+
+graceful-response:
+  isReturnAllResponse: true # 是否将具体报错信息返回到msg
+  response-style: 1
+  printExceptionInGlobalAdvice: true
+  defaultSuccessCode: 200
+  defaultSuccessMsg: '成功'
+  defaultErrorCode: 500
+  defaultErrorMsg: '失败'
+  exclude-packages:
+    - springfox.**

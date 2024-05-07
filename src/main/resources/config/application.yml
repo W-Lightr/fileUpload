@@ -1,0 +1,17 @@
+# 应用服务 WEB 访问端口
+
+server:
+  port: 8080
+spring:
+  application:
+    name: lightr-server
+  profiles:
+    active: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+swagger:
+  enable: true
+  application-name: '接口信息'
+  application-version: '1.1'
+  application-description: '接口文档'

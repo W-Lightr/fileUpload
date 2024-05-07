@@ -1,0 +1,6 @@
+logging:
+  file:
+    path: ./log
+  level:
+    root: info
+
