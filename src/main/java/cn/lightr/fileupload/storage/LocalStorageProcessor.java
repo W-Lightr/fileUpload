@@ -9,10 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +65,7 @@ public class LocalStorageProcessor implements StorageProcessor {
      * @throws IOException
      */
     @Override
-    public String mergeChunks(String cacheKey, Object attachment) throws IOException {
+    public String mergeChunks(String cacheKey, Object attachment,String identifier) throws IOException {
         List<String> chunkFilePaths = (List<String>) attachment;
         // 这里cacheKey == filename
         // 构造文件存储路径
@@ -91,4 +89,8 @@ public class LocalStorageProcessor implements StorageProcessor {
         return filePath;
     }
 
+    @Override
+    public InputStream download(String identifier, String realPath) throws IOException {
+        return Files.newInputStream(new File(realPath).toPath());
+    }
 }

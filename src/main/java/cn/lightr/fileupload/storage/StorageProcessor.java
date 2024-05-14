@@ -62,5 +62,14 @@ public interface StorageProcessor {
      * @param attachment 附加信息
      * @return
      */
-    String mergeChunks(String cacheKey, Object attachment) throws IOException;
+    String mergeChunks(String cacheKey, Object attachment,String identifier) throws IOException;
+
+    /**
+     * 获取文件对象
+     * @param identifier md5
+     * @param realPath realPath
+     * @return
+     * @throws IOException
+     */
+    InputStream download(String identifier,String realPath) throws IOException;
 }

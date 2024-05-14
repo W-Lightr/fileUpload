@@ -31,6 +31,13 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+minio:
+  bucketName: lightr
+  endpoint: http://192.168.1.12:9000
+  accessKey: admin
+  secretKey: Founder#123
+storage: # 存储方式 minio local
+  mode: local
 # mybatis
 mybatis:
   mapper-locations: classpath:/mapper/*/*.xml

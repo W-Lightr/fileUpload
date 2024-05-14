@@ -99,6 +99,24 @@ public class UFileUtil {
     }
 
     /**
+     * 传统流对流传输
+     *
+     * @param inputStream
+     * @param outputStream
+     * @throws IOException
+     */
+    public static void writeStreamToStreamNormal(InputStream inputStream, OutputStream outputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len;
+        while ((len = inputStream.read(buffer)) != MINUS_ONE_INT.intValue()) {
+            outputStream.write(buffer, ZERO_INT, len);
+        }
+        outputStream.flush();
+        inputStream.close();
+        outputStream.close();
+    }
+
+    /**
      * 生成文件本地的保存路径
      *
      * @param filePrefix 路径

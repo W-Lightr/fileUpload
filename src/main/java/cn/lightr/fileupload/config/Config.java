@@ -1,11 +1,16 @@
 package cn.lightr.fileupload.config;
 
+import cn.lightr.fileupload.constant.consist.StorageMode;
+import cn.lightr.fileupload.storage.LocalStorageProcessor;
+import cn.lightr.fileupload.storage.MinioStorageProcessor;
+import cn.lightr.fileupload.storage.StorageProcessor;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
@@ -61,5 +66,22 @@ public class Config {
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
         return interceptor;
+    }
+    @Value("${storage.mode}")
+    private String storageMode;
+    @Bean
+    public StorageProcessor storageProcessor() {
+        StorageProcessor storageProcessor = null;
+        if (StorageMode.MINIO.equalsIgnoreCase(storageMode)) {
+            storageProcessor = new MinioStorageProcessor();
+        }
+        if (StorageMode.LOCAL.equalsIgnoreCase(storageMode)) {
+            storageProcessor = new LocalStorageProcessor();
+        }
+        // 默认使用本地存储
+        if (storageProcessor == null){
+            storageProcessor = new LocalStorageProcessor();
+        }
+        return storageProcessor;
     }
 }

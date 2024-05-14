@@ -20,9 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -121,7 +120,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             String filePath;
             try {
                 //合并
-                filePath = storageProcessor.mergeChunks(filename, filePaths);
+                filePath = storageProcessor.mergeChunks(filename, filePaths,identifier);
                 //合并完成删除数据库记录的分片信息
                 fileChunkService.remove(new QueryWrapper<FileChunk>().eq(FileChunk.IDENTIFIER, identifier));
             } catch (IOException e) {
@@ -166,7 +165,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         response.setHeader(FileConstant.CONTENT_LENGTH_STR, fileInfo.getFileSize());
         // 添加跨域头
         UFileUtil.addCorsResponseHeader(response);
-        File file = new File(fileInfo.getRealPath());
-        UFileUtil.writeFileToStream(new FileInputStream(file), response.getOutputStream(), file.length());
+        InputStream stream = storageProcessor.download(fileInfo.getIdentifier(), fileInfo.getRealPath());
+        UFileUtil.writeStreamToStreamNormal(stream, response.getOutputStream());
     }
 }
