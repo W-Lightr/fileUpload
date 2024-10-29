@@ -76,12 +76,8 @@ public class FileInfoController {
     }
     //删除文件
     @PostMapping("delete")
-    public ResponseString delete( String fileId) {
-        System.out.println(fileId);
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setFileId(fileId);
-        fileInfo.setDeleteFlag(1);
-        return new ResponseString(fileInfoService.updateById(fileInfo));
+    public ResponseString delete( String fileId,String realPath) {
+        return new ResponseString(fileInfoService.delete(fileId,realPath));
     }
 
     @GetMapping("download")

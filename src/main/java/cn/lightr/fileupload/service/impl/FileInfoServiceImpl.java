@@ -14,6 +14,7 @@ import cn.lightr.fileupload.service.intf.IFileInfoService;
 import cn.lightr.fileupload.storage.StorageProcessor;
 import cn.lightr.fileupload.utils.UFileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,5 +168,22 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         UFileUtil.addCorsResponseHeader(response);
         InputStream stream = storageProcessor.download(fileInfo.getIdentifier(), fileInfo.getRealPath());
         UFileUtil.writeStreamToStreamNormal(stream, response.getOutputStream());
+    }
+
+    //删除
+    public boolean delete(String fileId,String realPath) {
+        UpdateWrapper<FileInfo> updateWrapper = new UpdateWrapper<>();
+        updateWrapper.eq(FileInfo.FILE_ID, fileId);
+        updateWrapper.eq(FileInfo.REAL_PATH, realPath);
+        updateWrapper.set(FileInfo.DELETE_FLAG, 1);
+        try {
+            if (update(updateWrapper)){
+                storageProcessor.delete(null, realPath);
+                return true;
+            }
+            return false;
+        }catch (Exception e){
+            return false;
+        }
     }
 }
