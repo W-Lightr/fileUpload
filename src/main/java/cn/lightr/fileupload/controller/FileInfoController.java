@@ -1,5 +1,6 @@
 package cn.lightr.fileupload.controller;
 
+import cn.lightr.fileupload.model.dto.DeleteDto;
 import cn.lightr.fileupload.model.dto.FileChunkCheckDTO;
 import cn.lightr.fileupload.model.dto.FileChunkMergeDTO;
 import cn.lightr.fileupload.model.dto.FileSecUploadDTO;
@@ -39,7 +40,8 @@ public class FileInfoController {
      */
     @PostMapping("sec-upload")
     public ResponseString secUpload(@Validated @RequestBody FileSecUploadDTO fileSecUploadPO) {
-        return new ResponseString(fileInfoService.secUpload(fileSecUploadPO.getIdentifier()),null);
+        FileInfo fileInfo = fileInfoService.secUpload(fileSecUploadPO.getIdentifier());
+        return new ResponseString(fileInfo != null,fileInfo);
     }
 
     /**
@@ -76,13 +78,13 @@ public class FileInfoController {
     }
     //删除文件
     @PostMapping("delete")
-    public ResponseString delete( String fileId,String realPath) {
-        return new ResponseString(fileInfoService.delete(fileId,realPath),null);
+    public ResponseString delete(@RequestBody DeleteDto deleteDto) {
+        return new ResponseString(fileInfoService.delete(deleteDto.getFileId(),deleteDto.getRealPath(),deleteDto.isDeleteFile()),null);
     }
 
     @GetMapping("download")
-    public void download(String fileId, HttpServletResponse response) throws IOException {
-        fileInfoService.download(fileId, response);
+    public void download(String fileId, String dxccid, HttpServletResponse response) throws IOException {
+        fileInfoService.download(fileId,dxccid, response);
     }
 
 }

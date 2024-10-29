@@ -47,13 +47,13 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
      * @param identifier hash
      * @return boolean
      */
-    public boolean secUpload(String identifier) {
+    public FileInfo secUpload(String identifier) {
         //检查数据库是否有该hash值文件
-        List<FileInfo> fileInfos = getBaseMapper().selectList(new QueryWrapper<FileInfo>().eq(FileInfo.IDENTIFIER, identifier));
+        List<FileInfo> fileInfos = getBaseMapper().selectList(new QueryWrapper<FileInfo>().eq(FileInfo.IDENTIFIER, identifier).eq(FileInfo.DELETE_FLAG, 0));
         if (CollectionUtils.isEmpty(fileInfos)) {
-            return false;
+            return null;
         }
-        return true;
+        return fileInfos.get(0);
     }
 
     /**
@@ -156,8 +156,15 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
         return fileInfo;
     }
 
-    public void download(String fileId, HttpServletResponse response) throws IOException {
-        FileInfo fileInfo = getById(fileId);
+    public void download(String fileId, String dxccid, HttpServletResponse response) throws IOException {
+        QueryWrapper<FileInfo> wrapper = new QueryWrapper<>();
+        FileInfo files = new FileInfo();
+        files.setDeleteFlag(0);
+        files.setFileId(fileId);
+        files.setRealPath(dxccid);
+        wrapper.setEntity(files);
+        FileInfo fileInfo = getOne(wrapper);
+
         if (fileInfo == null){
             throw new RuntimeException("文件不存在");
         }
@@ -173,14 +180,16 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
     }
 
     //删除
-    public boolean delete(String fileId,String realPath) {
+    public boolean delete(String fileId,String realPath,boolean deleteFile) {
         UpdateWrapper<FileInfo> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq(FileInfo.FILE_ID, fileId);
         updateWrapper.eq(FileInfo.REAL_PATH, realPath);
         updateWrapper.set(FileInfo.DELETE_FLAG, 1);
         try {
             if (update(updateWrapper)){
-                storageProcessor.delete(null, realPath);
+                if (deleteFile){
+                    storageProcessor.delete(null, realPath);
+                }
                 return true;
             }
             return false;
