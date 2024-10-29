@@ -53,7 +53,7 @@ public class FileInfo implements Serializable {
     private String identifier;
 
     @ApiModelProperty("创建人")
-    private Long createUserId;
+    private String createUserId;
 
     @ApiModelProperty("创建人")
     private String createUserName;

@@ -40,7 +40,7 @@ public class FileChunk implements Serializable {
     private LocalDateTime expirationTime;
 
     @ApiModelProperty("创建人")
-    private Long createUser;
+    private String createUser;
 
     @ApiModelProperty("创建时间")
     private LocalDateTime createTime;

@@ -50,7 +50,7 @@ public class MinioStorageProcessor implements StorageProcessor {
 
     @Override
     public void delete(String cacheKey, String filePath) throws IOException {
-
+        minioUtil.delete(minioUtil.bucketName, filePath);
     }
 
     /**

@@ -54,7 +54,7 @@ public class LocalStorageProcessor implements StorageProcessor {
 
     @Override
     public void delete(String cacheKey, String filePath) throws IOException {
-
+        UFileUtil.delete(filePath);
     }
 
     /**

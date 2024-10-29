@@ -18,6 +18,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -98,7 +99,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
             chunk.setChunkNumber(fileChunkUpload.getChunkNumber());
             chunk.setIdentifier(fileChunkUpload.getIdentifier());
             chunk.setRealPath(filePath);
-            chunk.setCreateUser(1L);
+            chunk.setCreateUser("admin");
             chunk.setId(IdUtil.simpleUUID());
             fileChunkService.save(chunk);
             // 查看所有分片是否上传完成
@@ -111,7 +112,8 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
 
     }
 
-    public void mergeChunks(String filename, String identifier, Long totalSize, Long userId) {
+    public FileInfo mergeChunks(String filename, String identifier, Long totalSize, String userId) {
+        FileInfo fileInfo = new FileInfo();
         //查询分片信息
         List<FileChunk> fileChunks = fileChunkService.list(new QueryWrapper<FileChunk>().eq(FileChunk.IDENTIFIER, identifier));
         if (CollectionUtils.isNotEmpty(fileChunks)){
@@ -129,7 +131,6 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
                 throw new RuntimeException("合并失败");
             }
             //构建文件信息保存到数据库
-            FileInfo fileInfo = new FileInfo();
             fileInfo.setFileId(IdUtil.simpleUUID()); // 文件主键
             fileInfo.setFileTransferName(FileNameUtil.getName(FileUtil.file(filePath))); // 保存后文件名称
             fileInfo.setRealPath(filePath); // 文件真实存储路径
@@ -152,6 +153,7 @@ public class FileInfoServiceImpl extends ServiceImpl<FileInfoMapper, FileInfo> i
                 throw new RuntimeException("保存文件失败");
             }
         }
+        return fileInfo;
     }
 
     public void download(String fileId, HttpServletResponse response) throws IOException {

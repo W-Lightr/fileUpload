@@ -39,7 +39,7 @@ public class FileInfoController {
      */
     @PostMapping("sec-upload")
     public ResponseString secUpload(@Validated @RequestBody FileSecUploadDTO fileSecUploadPO) {
-        return new ResponseString(fileInfoService.secUpload(fileSecUploadPO.getIdentifier()));
+        return new ResponseString(fileInfoService.secUpload(fileSecUploadPO.getIdentifier()),null);
     }
 
     /**
@@ -63,8 +63,8 @@ public class FileInfoController {
      */
     @PostMapping("merge")
     public ResponseString mergeChunks(@Validated @RequestBody FileChunkMergeDTO fileChunkMerge) {
-        fileInfoService.mergeChunks(fileChunkMerge.getFilename(), fileChunkMerge.getIdentifier(), fileChunkMerge.getTotalSize(),0L);
-        return new ResponseString(true);
+        FileInfo fileInfo = fileInfoService.mergeChunks(fileChunkMerge.getFilename(), fileChunkMerge.getIdentifier(), fileChunkMerge.getTotalSize(), "admin");
+        return new ResponseString(true,fileInfo);
     }
 
 
@@ -77,7 +77,7 @@ public class FileInfoController {
     //删除文件
     @PostMapping("delete")
     public ResponseString delete( String fileId,String realPath) {
-        return new ResponseString(fileInfoService.delete(fileId,realPath));
+        return new ResponseString(fileInfoService.delete(fileId,realPath),null);
     }
 
     @GetMapping("download")

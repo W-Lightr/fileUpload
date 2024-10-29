@@ -28,7 +28,7 @@ CREATE TABLE `file_chunk` (
   `real_path` varchar(700) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '分片真实的存储路径',
   `chunk_number` int(11) NOT NULL DEFAULT '0' COMMENT '分片编号',
   `expiration_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '过期时间',
-  `create_user` bigint(20) NOT NULL COMMENT '创建人',
+  `create_user` varchar(32) NOT NULL COMMENT '创建人',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_identifier_chunk_number_create_user` (`identifier`,`chunk_number`,`create_user`) USING BTREE COMMENT '文件唯一标识、分片编号和用户ID的唯一索引'
@@ -51,7 +51,7 @@ CREATE TABLE `file_info` (
   `file_source_name` varchar(255) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文件源名称',
   `file_preview_content_type` varchar(255) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文件预览的响应头Content-Type的值',
   `identifier` varchar(255) COLLATE utf8mb4_bin NOT NULL DEFAULT '' COMMENT '文件唯一标识',
-  `create_user_id` bigint(20) NOT NULL COMMENT '创建人',
+  `create_user_id` varchar(32) NOT NULL COMMENT '创建人',
   `create_user_name` varchar(30) COLLATE utf8mb4_bin NOT NULL COMMENT '创建人',
   `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `delete_flag` int(1) DEFAULT '0' COMMENT '删除标志',

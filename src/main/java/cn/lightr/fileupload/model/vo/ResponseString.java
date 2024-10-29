@@ -14,4 +14,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ResponseString {
     private Object result;
+    private Object data;
 }
